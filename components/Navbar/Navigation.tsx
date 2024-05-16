@@ -38,13 +38,13 @@ const Navigation = () => {
   ]
 
   return (
-    <nav className='flex h-full items-center space-x-2 overflow-y-auto sm:space-x-4 lg:space-x-6'>
+    <nav className='flex h-full w-full items-center space-x-2 overflow-x-auto sm:space-x-4 lg:space-x-6'>
       {routes.map(({ label, href, isActive }) => (
         <Link
           key={href}
           href={href}
           className={cn(
-            'text-sm font-medium transition-colors duration-200 hover:text-foreground/80',
+            'relative text-sm font-medium transition-colors duration-200 hover:text-foreground/80',
             isActive ? 'font-semibold text-foreground' : 'text-foreground/60'
           )}
         >
