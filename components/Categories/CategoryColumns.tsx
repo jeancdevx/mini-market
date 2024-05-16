@@ -40,7 +40,9 @@ export const categoryColumns: Array<ColumnDef<CategoryColumn>> = [
       return <div className='flex w-2/4 justify-center'>Date</div>
     },
     cell: ({ row }) => (
-      <div className='flex w-2/4 justify-center'>{row.original.createdAt}</div>
+      <div className='flex w-2/4 items-center justify-center text-center'>
+        {row.original.createdAt}
+      </div>
     )
   },
   {
