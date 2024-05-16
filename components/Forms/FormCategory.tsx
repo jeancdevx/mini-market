@@ -4,18 +4,16 @@ import { useState } from 'react'
 
 import { useParams } from 'next/navigation'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import type { Category } from '@prisma/client'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-
-import { Trash } from 'lucide-react'
-
 import {
   createCategory,
   deleteCategory,
   updateCategory
-} from '@/actions/category.action'
+} from '@/server/categories/category.action'
+import { zodResolver } from '@hookform/resolvers/zod'
+import type { Category } from '@prisma/client'
+import { Trash } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 import {
   categorySchema,
@@ -42,18 +40,14 @@ interface FormCategoryProps {
 
 const FormCategory = ({ initialData }: FormCategoryProps) => {
   const [open, setOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   const params = useParams()
 
   const action = initialData ? 'Update' : 'Create'
   const title = initialData ? 'Edit Category' : 'Create Category'
-  const description = `${action.toLowerCase()} a category for your products`
-  const toastMessages = {
-    loading: initialData ? 'Updating category...' : 'Creating category...',
-    success: initialData ? 'Category updated' : 'Category created',
-    error: 'An error occurred while processing your request'
-  }
+  const description = initialData
+    ? 'Update the category details'
+    : 'Add a new category'
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
@@ -66,9 +60,9 @@ const FormCategory = ({ initialData }: FormCategoryProps) => {
 
   const onSubmit = async (data: CategoryFormValues) => {
     try {
-      setIsLoading(true)
-
-      toast.loading(toastMessages.loading)
+      toast.loading(
+        initialData ? 'Updating category...' : 'Creating category...'
+      )
 
       const formData = new FormData()
       formData.append('name', data.name)
@@ -79,30 +73,30 @@ const FormCategory = ({ initialData }: FormCategoryProps) => {
         await createCategory(formData)
       }
 
-      toast.success(toastMessages.success)
+      toast.success(
+        initialData ? 'Category updated successfully' : 'Category created'
+      )
     } catch (error) {
-      toast.error(toastMessages.error)
+      toast.error(
+        'An error occurred while processing your request. Please try again.'
+      )
     } finally {
       toast.dismiss()
-      setIsLoading(false)
     }
   }
 
   const onDelete = async () => {
     try {
-      setIsLoading(true)
-
       toast.loading('Deleting category...')
 
       await deleteCategory(`${params.categoryId}`)
 
       toast.success('Category deleted')
     } catch (error) {
-      toast.error('An error occurred while processing your request')
+      toast.error('Make sure you remove all products in this category first.')
     } finally {
       toast.dismiss()
       setOpen(false)
-      setIsLoading(false)
     }
   }
 
@@ -112,21 +106,18 @@ const FormCategory = ({ initialData }: FormCategoryProps) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={async () => await onDelete()}
-        loading={isSubmitting || isLoading}
+        loading={isSubmitting}
       />
 
       <div className='flex items-center justify-between'>
-        <Heading
-          title={title}
-          description={description}
-        />
+        <Heading title={title} description={description} />
 
         {initialData && (
           <Button
             variant='destructive'
             size='sm'
             onClick={() => setOpen(true)}
-            disabled={isSubmitting || isLoading}
+            disabled={isSubmitting}
           >
             <Trash className='h-4 w-4 sm:mr-2' />
             <span className='hidden sm:inline'>Delete</span>
@@ -138,7 +129,6 @@ const FormCategory = ({ initialData }: FormCategoryProps) => {
 
       <Form {...form}>
         <form
-          action={createCategory}
           onSubmit={form.handleSubmit(onSubmit)}
           className='w-full space-y-8'
         >
@@ -153,7 +143,7 @@ const FormCategory = ({ initialData }: FormCategoryProps) => {
                   <FormControl>
                     <Input
                       placeholder='e.g. Clothing, Electronics, etc.'
-                      disabled={isSubmitting || isLoading}
+                      disabled={isSubmitting}
                       {...field}
                     />
                   </FormControl>
@@ -164,10 +154,7 @@ const FormCategory = ({ initialData }: FormCategoryProps) => {
             />
           </div>
 
-          <Button
-            type='submit'
-            disabled={isSubmitting || isLoading}
-          >
+          <Button type='submit' disabled={isSubmitting}>
             {action}
           </Button>
         </form>
