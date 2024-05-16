@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/Button'
-import Modal from '@/components/ui/Modal'
+import { Modal } from '@/components/ui/Modal'
 
 interface AlertModalProps {
   isOpen: boolean
@@ -35,18 +35,10 @@ const AlertModal = ({
       onClose={onClose}
     >
       <div className='flex w-full items-center justify-end space-x-2 pt-6'>
-        <Button
-          disabled={loading}
-          variant='outline'
-          onClick={onClose}
-        >
+        <Button disabled={loading} variant='outline' onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          onClick={onConfirm}
-          disabled={loading}
-          variant='destructive'
-        >
+        <Button onClick={onConfirm} disabled={loading} variant='destructive'>
           Confirm
         </Button>
       </div>

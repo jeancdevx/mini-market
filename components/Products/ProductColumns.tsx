@@ -1,15 +1,16 @@
 'use client'
 
-import { type ColumnDef } from '@tanstack/react-table'
+import Image from 'next/image'
 
+import { type ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 
+import { formatCurrency } from '@/lib/utils'
+
+import { AspectRatio } from '@/components/ui/AspectRatio'
+import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 
-import { formatCurrency } from '@/lib/utils'
-import Image from 'next/image'
-import { AspectRatio } from '../ui/AspectRatio'
-import { Badge } from '../ui/Badge'
 import ProductCellAction from './ProductCellAction'
 
 export interface ProductColumn {
@@ -56,7 +57,7 @@ export const productColumns: Array<ColumnDef<ProductColumn>> = [
       )
     },
     cell: ({ row }) => (
-      <div className='flex justify-center font-semibold'>
+      <div className='flex justify-center text-center font-semibold'>
         {row.original.name}
       </div>
     )
@@ -78,7 +79,9 @@ export const productColumns: Array<ColumnDef<ProductColumn>> = [
       return <div className='flex justify-center'>Stock</div>
     },
     cell: ({ row }) => (
-      <div className='flex justify-center'>{row.original.stock}</div>
+      <div className='flex justify-center text-center'>
+        {row.original.stock}
+      </div>
     )
   },
   {
@@ -87,7 +90,7 @@ export const productColumns: Array<ColumnDef<ProductColumn>> = [
       return <div className='flex justify-center'>Price</div>
     },
     cell: ({ row }) => (
-      <div className='flex justify-center'>
+      <div className='flex justify-center text-center'>
         {formatCurrency(row.original.price)}
       </div>
     )
@@ -98,7 +101,9 @@ export const productColumns: Array<ColumnDef<ProductColumn>> = [
       return <div className='flex justify-center'>Date</div>
     },
     cell: ({ row }) => (
-      <div className='flex justify-center'>{row.original.createdAt}</div>
+      <div className='flex justify-center text-center'>
+        {row.original.createdAt}
+      </div>
     )
   },
   {

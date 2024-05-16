@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 import {
   flexRender,
   getCoreRowModel,
@@ -11,7 +13,6 @@ import {
   type ColumnFiltersState,
   type SortingState
 } from '@tanstack/react-table'
-import { useState } from 'react'
 
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -61,7 +62,7 @@ export function DataTable<TData, TValue>({
         <Input
           placeholder={`${searchPlaceholder}...`}
           value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ''}
-          onChange={(event) =>
+          onChange={event =>
             table.getColumn(searchKey)?.setFilterValue(event.target.value)
           }
           className='max-w-sm'
@@ -71,9 +72,9 @@ export function DataTable<TData, TValue>({
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
@@ -91,12 +92,12 @@ export function DataTable<TData, TValue>({
 
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,

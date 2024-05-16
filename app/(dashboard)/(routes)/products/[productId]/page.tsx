@@ -1,6 +1,6 @@
-import FormProduct from '@/components/Forms/FormProduct'
-
 import { db } from '@/lib/db'
+
+import FormProduct from '@/components/Forms/FormProduct'
 
 interface ProductIdPageProps {
   params: {
@@ -20,10 +20,7 @@ const ProductIdPage = async ({ params: { productId } }: ProductIdPageProps) => {
   return (
     <div className='flex flex-col'>
       <div className='flex-1 space-y-4 p-8 pt-6'>
-        <FormProduct
-          initialData={product}
-          categories={categories}
-        />
+        <FormProduct initialData={product} categories={categories} />
       </div>
     </div>
   )

@@ -4,11 +4,9 @@ import { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { toast } from 'sonner'
-
+import { deleteProduct } from '@/server/products/product.action'
 import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react'
-
-import { deleteProduct } from '@/actions/product.action'
+import { toast } from 'sonner'
 
 import AlertModal from '@/components/Modals/AlertModal'
 import { Button } from '@/components/ui/Button'
@@ -68,11 +66,7 @@ const ProductCellAction = ({ data }: ProductCellActionProps) => {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant='ghost'
-            className='h-8 w-8 p-0'
-            disabled={isLoading}
-          >
+          <Button variant='ghost' className='h-8 w-8 p-0' disabled={isLoading}>
             <span className='sr-only'>Open menu</span>
             <MoreHorizontal className='h-4 w-4' />
           </Button>

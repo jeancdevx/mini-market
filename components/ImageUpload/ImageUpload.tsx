@@ -4,14 +4,15 @@ import { useEffect } from 'react'
 
 import { Trash } from 'lucide-react'
 
+import { useUpload } from '@/hooks/use-image-upload.hook'
+
+import { AspectRatio } from '@/components/ui/AspectRatio'
 import { Button } from '@/components/ui/Button'
 
-import { AspectRatio } from '../ui/AspectRatio'
 import { ButtonFile } from './ButtonFile'
 import { Dropzone } from './Dropzone'
 import { ImagePreview } from './ImagePreview'
 import { ProgressCard } from './ProgressCard'
-import { useUpload } from './use-image-upload.hook'
 
 interface ImageUploadProps {
   disabled?: boolean
@@ -39,7 +40,7 @@ const ImageUpload = ({
   }, [uploadImage.isSuccess])
 
   return (
-    <div className='flex flex-col gap-y-4'>
+    <div className='flex flex-col gap-y-2'>
       {value ? (
         <>
           <div className='w-full rounded-xl py-4 sm:mx-auto sm:max-w-sm'>
@@ -97,7 +98,7 @@ const ImageUpload = ({
       )}
 
       {!uploadImage.isFetching && !uploadImage.isSuccess && (
-        <div className='flex w-full items-center justify-center rounded-xl sm:mx-auto sm:max-w-sm'>
+        <div className='mt-2 flex w-full items-center justify-center rounded-xl sm:mx-auto sm:max-w-sm'>
           <ButtonFile
             disabled={disabled}
             inputRef={uploadImage.inputRef}

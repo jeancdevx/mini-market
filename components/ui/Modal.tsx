@@ -30,10 +30,7 @@ const Modal = ({
   }
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={onChange}
-    >
+    <Dialog open={isOpen} onOpenChange={onChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
@@ -46,4 +43,4 @@ const Modal = ({
   )
 }
 
-export default Modal
+export { Modal }

@@ -16,11 +16,7 @@ export const ButtonFile = ({
   onChange
 }: ButtonFileProps) => {
   return (
-    <Button
-      type='button'
-      onClick={onClick}
-      disabled={disabled}
-    >
+    <Button type='button' onClick={onClick} disabled={disabled}>
       Choose a file
       <input
         ref={inputRef}

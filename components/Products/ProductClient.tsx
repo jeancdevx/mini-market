@@ -16,10 +16,7 @@ const ProductClient = ({ products }: ProductClientProps) => {
   return (
     <div className='flex flex-col space-y-4'>
       <div className='flex w-full items-center justify-between'>
-        <Heading
-          title='Products'
-          description='Manage your products here'
-        />
+        <Heading title='Products' description='Manage your products here' />
 
         <Link href='/products/create'>
           <Button>Create</Button>
@@ -30,7 +27,7 @@ const ProductClient = ({ products }: ProductClientProps) => {
         columns={productColumns}
         data={products}
         searchKey='name'
-        searchPlaceholder='Search Categories'
+        searchPlaceholder='Search products'
       />
     </div>
   )

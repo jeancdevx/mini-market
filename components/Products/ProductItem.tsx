@@ -1,12 +1,10 @@
 import Image from 'next/image'
 
-import AddToCart from '@/components/AddToCart'
+import { formatCurrency } from '@/lib/utils'
 
 import { AspectRatio } from '@/components/ui/AspectRatio'
-import { Badge } from '@/components/ui/Badge'
-import { Separator } from '@/components/ui/Separator'
 
-import { formatCurrency } from '@/lib/utils'
+import AddCart from '../Cart/AddCart'
 
 interface ProductItemProps {
   id: string
@@ -28,41 +26,32 @@ const ProductItem = ({
   category
 }: ProductItemProps) => {
   return (
-    <div className='flex h-full w-full max-w-xs flex-col gap-y-2 sm:max-w-[280px] md:max-w-[350px] lg:max-w-[300px]'>
-      <AspectRatio ratio={16 / 9}>
-        <div className='relative h-full w-full bg-background'>
+    <div className='flex h-full w-full max-w-xs flex-col gap-y-2 sm:max-w-[280px] md:max-w-[350px] lg:max-w-[320px]'>
+      <AspectRatio ratio={4 / 3}>
+        <div className='relative h-full w-full rounded-lg'>
           <Image
             src={image}
             alt={name}
-            layout='fill'
-            objectFit='contain'
-            objectPosition='center'
+            fill
             quality={100}
-            className='h-full w-full rounded-md'
+            className='h-full w-full rounded-md object-contain'
           />
         </div>
       </AspectRatio>
 
       <div className='flex flex-col gap-y-2'>
         <div className='flex items-center justify-between'>
-          <h3 className='text-lg font-bold'>{name}</h3>
-          <p className='text-sm font-bold text-green-700 dark:text-green-400'>
+          <h3 className='truncate text-lg font-bold'>{name}</h3>
+          <p className='text-sm font-bold text-green-800 dark:text-green-400'>
             {formatCurrency(price)}
           </p>
         </div>
 
         <p className='truncate text-sm text-muted-foreground'>{description}</p>
 
-        <div className='flex items-center justify-between'>
-          <p className='text-sm font-semibold text-foreground'>
-            {stock} in stock
-          </p>
-          <Badge>{category}</Badge>
-        </div>
+        <div className='flex items-center justify-between'></div>
 
-        <Separator />
-
-        <AddToCart id={id} />
+        <AddCart id={id} />
       </div>
     </div>
   )

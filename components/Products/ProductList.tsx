@@ -1,8 +1,9 @@
 'use client'
 
+import Image from 'next/image'
+
 import type { Category, Product } from '@prisma/client'
 
-import Image from 'next/image'
 import ProductItem from './ProductItem'
 
 interface ProductListProps {
@@ -11,24 +12,28 @@ interface ProductListProps {
 
 const ProductList = ({ products }: ProductListProps) => {
   return (
-    <div className='flex w-full max-w-7xl flex-wrap justify-center gap-y-8 py-4 sm:justify-between'>
+    <>
       {products.length > 0 ? (
-        products.map((product) => (
-          <ProductItem
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            description={product.description}
-            price={product.price}
-            image={product.image}
-            stock={product.stock}
-            category={product.category.name}
-          />
-        ))
+        <>
+          <div className='grid w-full grid-cols-1 place-items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+            {products.map(product => (
+              <ProductItem
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                description={product.description}
+                price={product.price}
+                image={product.image}
+                stock={product.stock}
+                category={product.category.name}
+              />
+            ))}
+          </div>
+        </>
       ) : (
-        <div className='flex w-full flex-col items-center justify-center'>
+        <div className='flex flex-col items-center justify-center gap-4'>
           <Image
-            src='/empty.jpg'
+            src='/empty.png'
             alt='Empty'
             width={256}
             height={256}
@@ -39,7 +44,7 @@ const ProductList = ({ products }: ProductListProps) => {
           </p>
         </div>
       )}
-    </div>
+    </>
   )
 }
 

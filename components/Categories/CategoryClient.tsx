@@ -16,10 +16,7 @@ const CategoryClient = ({ categories }: CategoryClientProps) => {
   return (
     <div className='flex flex-col space-y-4'>
       <div className='flex w-full items-center justify-between'>
-        <Heading
-          title='Categories'
-          description='Manage your categories here'
-        />
+        <Heading title='Categories' description='Manage your categories here' />
 
         <Link href='/categories/create'>
           <Button>Create</Button>
@@ -30,7 +27,7 @@ const CategoryClient = ({ categories }: CategoryClientProps) => {
         columns={categoryColumns}
         data={categories}
         searchKey='name'
-        searchPlaceholder='Search Categories'
+        searchPlaceholder='Search categories'
       />
     </div>
   )

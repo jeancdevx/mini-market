@@ -1,6 +1,6 @@
-import FormCategory from '@/components/Forms/FormCategory'
-
 import { db } from '@/lib/db'
+
+import FormCategory from '@/components/Forms/FormCategory'
 
 interface CategoryIdPageProps {
   params: {
