@@ -4,18 +4,16 @@ import { useState } from 'react'
 
 import { useParams } from 'next/navigation'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import type { Category, Product } from '@prisma/client'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-
-import { Trash } from 'lucide-react'
-
 import {
   createProduct,
   deleteProduct,
   updateProduct
-} from '@/actions/product.action'
+} from '@/server/products/product.action'
+import { zodResolver } from '@hookform/resolvers/zod'
+import type { Category, Product } from '@prisma/client'
+import { Trash } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 import {
   productSchema,
@@ -52,18 +50,12 @@ interface FormProductProps {
 
 const FormProduct = ({ initialData, categories }: FormProductProps) => {
   const [open, setOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   const params = useParams()
 
   const action = initialData ? 'Update' : 'Create'
   const title = initialData ? 'Edit Product' : 'Create Product'
   const description = `${action.toLowerCase()} a product for your store.`
-  const toastMessages = {
-    loading: initialData ? 'Updating product...' : 'Creating product...',
-    success: initialData ? 'Product updated' : 'Product created',
-    error: 'An error occurred while processing your request'
-  }
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -90,9 +82,7 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
 
   const onSubmit = async (data: ProductFormValues) => {
     try {
-      setIsLoading(true)
-
-      toast.loading(toastMessages.loading)
+      toast.loading(initialData ? 'Updating product...' : 'Creating product...')
 
       const formData = new FormData()
 
@@ -109,19 +99,20 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
         await createProduct(formData)
       }
 
-      toast.success(toastMessages.success)
+      toast.success(
+        initialData
+          ? 'Product updated successfully'
+          : 'Product created successfully'
+      )
     } catch (error) {
-      toast.error(toastMessages.error)
+      toast.error('An error occurred while processing your request')
     } finally {
       toast.dismiss()
-      setIsLoading(false)
     }
   }
 
   const onDelete = async () => {
     try {
-      setIsLoading(true)
-
       toast.loading('Deleting product...')
 
       await deleteProduct(`${params.productId}`)
@@ -132,7 +123,6 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
     } finally {
       toast.dismiss()
       setOpen(false)
-      setIsLoading(false)
     }
   }
 
@@ -142,21 +132,18 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={async () => await onDelete()}
-        loading={isSubmitting || isLoading}
+        loading={isSubmitting}
       />
 
       <div className='flex items-center justify-between'>
-        <Heading
-          title={title}
-          description={description}
-        />
+        <Heading title={title} description={description} />
 
         {initialData && (
           <Button
             variant='destructive'
             size='sm'
             onClick={() => setOpen(true)}
-            disabled={isSubmitting || isLoading}
+            disabled={isSubmitting}
           >
             <Trash className='h-4 w-4 sm:mr-2' />
             <span className='hidden sm:inline'>Delete</span>
@@ -183,7 +170,7 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
 
                 <FormControl>
                   <ImageUpload
-                    disabled={isSubmitting || isLoading}
+                    disabled={isSubmitting}
                     onChange={field.onChange}
                     onRemove={field.onChange}
                     value={field.value}
@@ -206,7 +193,7 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
                   <FormControl>
                     <Input
                       placeholder='e.g. iPhone 13'
-                      disabled={isSubmitting || isLoading}
+                      disabled={isSubmitting}
                       {...field}
                     />
                   </FormControl>
@@ -227,7 +214,7 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
                     <Input
                       type='number'
                       placeholder='e.g. 999.99'
-                      disabled={isSubmitting || isLoading}
+                      disabled={isSubmitting}
                       {...field}
                     />
                   </FormControl>
@@ -248,7 +235,7 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
                     <Input
                       type='number'
                       placeholder='e.g. 100'
-                      disabled={isSubmitting || isLoading}
+                      disabled={isSubmitting}
                       {...field}
                     />
                   </FormControl>
@@ -270,7 +257,7 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
                   <FormControl>
                     <Textarea
                       placeholder='e.g. The latest iPhone from Apple.'
-                      disabled={isSubmitting || isLoading}
+                      disabled={isSubmitting}
                       className='h-32 resize-none'
                       {...field}
                     />
@@ -289,7 +276,7 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
                   <FormLabel>Category</FormLabel>
 
                   <Select
-                    disabled={isSubmitting || isLoading}
+                    disabled={isSubmitting}
                     onValueChange={field.onChange}
                     value={field.value}
                     defaultValue={field.value}
@@ -305,10 +292,7 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
 
                     <SelectContent>
                       {categories.map(({ id, name }) => (
-                        <SelectItem
-                          key={id}
-                          value={id}
-                        >
+                        <SelectItem key={id} value={id}>
                           {name}
                         </SelectItem>
                       ))}
@@ -321,10 +305,7 @@ const FormProduct = ({ initialData, categories }: FormProductProps) => {
             />
           </div>
 
-          <Button
-            type='submit'
-            disabled={isSubmitting || isLoading}
-          >
+          <Button type='submit' disabled={isSubmitting}>
             {action}
           </Button>
         </form>
