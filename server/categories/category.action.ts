@@ -13,16 +13,25 @@ export const createCategory = async (data: FormData) => {
   try {
     const { userId } = auth()
 
-    if (!userId) {
-      return { message: 'Unauthorized' }
-    }
+    if (!userId) return { message: 'Unauthenticated' }
 
-    const validatedData = categorySchema.safeParse({
-      name: data.get('name')
-    })
+    const formData = Object.fromEntries(data)
+    const validatedData = categorySchema.safeParse(formData)
 
     if (!validatedData.success) {
-      return { message: 'Validation error' }
+      return {
+        message: 'Validation error'
+      }
+    }
+
+    const existingCategory = await db.category.findFirst({
+      where: {
+        name: validatedData.data.name
+      }
+    })
+
+    if (existingCategory) {
+      return { message: 'Category already exists' }
     }
 
     const category = await db.category.create({
@@ -31,7 +40,11 @@ export const createCategory = async (data: FormData) => {
       }
     })
 
-    return category
+    if (!category) {
+      return { message: 'An error occurred while creating the category' }
+    }
+
+    return { message: 'Category created' }
   } catch (error) {
     return {
       message:
@@ -51,9 +64,8 @@ export const updateCategory = async (id: string, data: FormData) => {
       return { message: 'Unauthenticated' }
     }
 
-    const validatedData = categorySchema.safeParse({
-      name: data.get('name')
-    })
+    const formData = Object.fromEntries(data)
+    const validatedData = categorySchema.safeParse(formData)
 
     if (!validatedData.success) {
       return { message: 'Validation error' }
@@ -69,8 +81,14 @@ export const updateCategory = async (id: string, data: FormData) => {
       return { message: 'Category not found' }
     }
 
-    if (category.name === validatedData.data.name) {
-      return category
+    const existingCategory = await db.category.findFirst({
+      where: {
+        name: validatedData.data.name
+      }
+    })
+
+    if (existingCategory) {
+      return { message: 'Category already exists' }
     }
 
     await db.category.update({
@@ -82,7 +100,7 @@ export const updateCategory = async (id: string, data: FormData) => {
       }
     })
 
-    return category
+    return { message: 'Category updated' }
   } catch (error) {
     return {
       message:
@@ -102,7 +120,7 @@ export const deleteCategory = async (id: string) => {
       return { message: 'Unauthorized' }
     }
 
-    await db.category.delete({
+    await db.category.deleteMany({
       where: {
         id
       }
@@ -125,6 +143,27 @@ export async function getCategories() {
     orderBy: {
       name: 'asc'
     }
+  })
+
+  const formattedCategories = categories.map(({ id, name, createdAt }) => ({
+    id,
+    name,
+    createdAt: format(createdAt, 'MMMM do, yyyy')
+  }))
+
+  return formattedCategories
+}
+
+export async function getFilterCategories(
+  take: string = '5',
+  skip: string = '0'
+) {
+  const categories = await db.category.findMany({
+    orderBy: {
+      name: 'asc'
+    },
+    take: parseInt(take),
+    skip: parseInt(skip)
   })
 
   const formattedCategories = categories.map(({ id, name, createdAt }) => ({
