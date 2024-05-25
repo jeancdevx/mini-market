@@ -21,7 +21,7 @@ const Navbar = () => {
             alt='Logo'
             width={32}
             height={32}
-            className='mr-1 dark:invert'
+            className='mr-1 h-auto w-auto sm:h-8 sm:w-8'
             priority
           />
           <span className='hidden sm:inline'>market/ui</span>
