@@ -6,7 +6,6 @@ import {
   type ChangeEvent
 } from 'react'
 
-import axios from 'axios'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'sonner'
 
@@ -107,10 +106,6 @@ export const useUpload = () => {
           toast.success('Image uploaded successfully')
         }
       } catch (err) {
-        if (axios.isAxiosError<{ message: string }>(err)) {
-          toast.error(err.response?.data.message)
-        }
-
         if (err instanceof Error) {
           toast.error(err.message)
         }
