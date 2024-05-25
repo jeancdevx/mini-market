@@ -60,9 +60,7 @@ const FormCategory = ({ initialData }: FormCategoryProps) => {
 
   const onSubmit = async (data: CategoryFormValues) => {
     try {
-      toast.loading(
-        initialData ? 'Updating category...' : 'Creating category...'
-      )
+      toast.loading(`${action} category...`)
 
       const formData = new FormData()
       formData.append('name', data.name)
@@ -73,13 +71,9 @@ const FormCategory = ({ initialData }: FormCategoryProps) => {
         await createCategory(formData)
       }
 
-      toast.success(
-        initialData ? 'Category updated successfully' : 'Category created'
-      )
+      toast.success(`Category ${action.toLowerCase()}ed`)
     } catch (error) {
-      toast.error(
-        'An error occurred while processing your request. Please try again.'
-      )
+      toast.error('An error occurred. Please try again.')
     } finally {
       toast.dismiss()
     }
@@ -144,6 +138,7 @@ const FormCategory = ({ initialData }: FormCategoryProps) => {
                     <Input
                       placeholder='e.g. Clothing, Electronics, etc.'
                       disabled={isSubmitting}
+                      autoFocus
                       {...field}
                     />
                   </FormControl>
