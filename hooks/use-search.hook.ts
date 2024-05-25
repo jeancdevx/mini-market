@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import qs from 'query-string'
-
 import { useDebounce } from '@/hooks/use-debounce.hook'
 
 export const useSearch = () => {
@@ -21,19 +19,17 @@ export const useSearch = () => {
   const categoryId = searchParams.get('categoryId')
 
   useEffect(() => {
-    const url = qs.stringifyUrl(
-      {
-        url: pathname,
-        query: {
-          categoryId,
-          productName: debouncedValue
-        }
-      },
-      {
-        skipEmptyString: true,
-        skipNull: true
-      }
-    )
+    const params = new URLSearchParams()
+
+    if (categoryId) {
+      params.append('categoryId', categoryId)
+    }
+
+    if (debouncedValue) {
+      params.append('productName', debouncedValue)
+    }
+
+    const url = `${pathname}?${params.toString()}`
 
     router.push(url, { scroll: false })
   }, [debouncedValue])
